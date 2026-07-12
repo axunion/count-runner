@@ -1,0 +1,24 @@
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 100svh;
+  padding: 2rem;
+  text-align: center;
+}
+
+button {
+  padding: 0.5em 1.25em;
+  font: inherit;
+  border: 1px solid light-dark(#d4d4d8, #52525b);
+  border-radius: 0.5rem;
+  background-color: light-dark(#fafafa, #27272a);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+button:hover {
+  border-color: #a1a1aa;
+}
