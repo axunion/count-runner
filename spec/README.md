@@ -49,7 +49,7 @@ src/
     GamePrototype.test.ts      // 新規: 純関数の Vitest ユニットテスト
   App.tsx                      // 書き換え: <GamePrototype /> をマウントするだけにする
 public/
-  assets/themes/fantasy/       // 新規(空でよい): 後日制作するアセットの置き場所
+  assets/themes/fantasy/       // プロトタイプでは未作成。後日 04-assets.md §6 のパス規約に沿って画像配置時に作成する
 ```
 
 上記以外の既存ファイル(`src/index.tsx`、設定ファイル群)は変更しない。依存パッケージの追加もしない。
