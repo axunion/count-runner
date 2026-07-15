@@ -1,12 +1,12 @@
-import { GOAL_DISTANCE, LEADER_Y, STRIPE_INTERVAL } from "../constants.ts";
+import {
+  GOAL_DISTANCE,
+  LEADER_BOTTOM_OFFSET,
+  STRIPE_INTERVAL,
+} from "../constants.ts";
 import type { LoadedImages } from "../theme/assetLoader.ts";
 import { getSprite } from "../theme/assetLoader.ts";
 import type { ThemeAssetConfig } from "../theme/themeConfig.ts";
-
-export interface Viewport {
-  viewW: number;
-  viewH: number;
-}
+import type { Viewport } from "../viewport.ts";
 
 export function drawBackground(
   ctx: CanvasRenderingContext2D,
@@ -69,7 +69,8 @@ export function drawGoalLine(
   distance: number,
 ) {
   const { viewW, viewH } = viewport;
-  const goalY = LEADER_Y - (GOAL_DISTANCE - distance);
+  const leaderY = viewH - LEADER_BOTTOM_OFFSET;
+  const goalY = leaderY - (GOAL_DISTANCE - distance);
   if (goalY <= -40 || goalY >= viewH + 40) return;
 
   const sprite = getSprite(theme, images, "goalBanner");

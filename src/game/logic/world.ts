@@ -9,8 +9,8 @@ import {
   GOAL_SAFETY,
   INITIAL_UNITS,
   LANE_MARGIN,
+  LEADER_BOTTOM_OFFSET,
   LEADER_LERP_RATE,
-  LEADER_Y,
   ROW_HEIGHT,
   ROW_INTERVAL,
   SCROLL_SPEED,
@@ -20,8 +20,8 @@ import {
   WOBBLE_AMP,
   WOBBLE_FREQ,
 } from "../constants.ts";
-import type { Viewport } from "../render/field.ts";
 import type { GateKind, ThemeAssetConfig } from "../theme/themeConfig.ts";
+import type { Viewport } from "../viewport.ts";
 import { formationOffset, reassignFormation } from "./formation.ts";
 import { applyGate, rollRowPattern } from "./gates.ts";
 import type { GamePhase, Unit, WorldState } from "./types.ts";
@@ -54,13 +54,14 @@ function createUnit(
   return { x, y, offsetX, offsetY, wobblePhase: Math.random() * Math.PI * 2 };
 }
 
-export function createWorldState(): WorldState {
+export function createWorldState(viewport: Viewport): WorldState {
   const leaderX = VIEW_W / 2;
+  const leaderY = viewport.viewH - LEADER_BOTTOM_OFFSET;
   const units: Unit[] = [];
   for (let i = 0; i < INITIAL_UNITS; i++) {
     const offset = formationOffset(i);
     units.push(
-      createUnit(leaderX + offset.x, LEADER_Y + offset.y, offset.x, offset.y),
+      createUnit(leaderX + offset.x, leaderY + offset.y, offset.x, offset.y),
     );
   }
 
@@ -101,15 +102,16 @@ function updateRows(world: WorldState, viewport: Viewport, dt: number) {
   world.rows = world.rows.filter((row) => row.y < viewport.viewH + ROW_HEIGHT);
 }
 
-function updateUnits(world: WorldState, dt: number) {
+function updateUnits(world: WorldState, viewport: Viewport, dt: number) {
   const wobbleBase = world.elapsed * WOBBLE_FREQ;
   const minX = LANE_MARGIN + UNIT_RADIUS;
   const maxX = VIEW_W - LANE_MARGIN - UNIT_RADIUS;
+  const leaderY = viewport.viewH - LEADER_BOTTOM_OFFSET;
 
   for (const unit of world.units) {
     const wobble = Math.sin(wobbleBase + unit.wobblePhase) * WOBBLE_AMP;
     const targetX = clamp(world.leaderX + unit.offsetX + wobble, minX, maxX);
-    const targetY = LEADER_Y + unit.offsetY;
+    const targetY = leaderY + unit.offsetY;
     unit.x = dampLerp(unit.x, targetX, UNIT_FOLLOW_RATE, dt);
     unit.y = dampLerp(unit.y, targetY, UNIT_FOLLOW_RATE, dt);
   }
@@ -158,11 +160,13 @@ function applyGateEffect(
 
 function resolveRowCollisions(
   world: WorldState,
+  viewport: Viewport,
   theme: ThemeAssetConfig,
 ): StepEvents {
   const events: StepEvents = {};
+  const leaderY = viewport.viewH - LEADER_BOTTOM_OFFSET;
   for (const row of world.rows) {
-    if (row.resolved || row.y < LEADER_Y) continue;
+    if (row.resolved || row.y < leaderY) continue;
     row.resolved = true;
     const isLeft = world.leaderX < VIEW_W / 2;
     const kind = isLeft ? row.left : row.right;
@@ -193,10 +197,10 @@ export function stepWorld(
   spawnRowsIfNeeded(world, rng);
   updateRows(world, viewport, dt);
   world.leaderX = dampLerp(world.leaderX, world.targetX, LEADER_LERP_RATE, dt);
-  updateUnits(world, dt);
+  updateUnits(world, viewport, dt);
   updateFloatTexts(world, dt);
 
-  const events = resolveRowCollisions(world, theme);
+  const events = resolveRowCollisions(world, viewport, theme);
 
   if (!events.finished && world.distance >= GOAL_DISTANCE) {
     events.finished = "cleared";

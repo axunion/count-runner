@@ -1,9 +1,9 @@
 import { createSignal, onCleanup, onMount } from "solid-js";
 import {
+  BACKING_SCALE_CAP,
   DPR_CAP,
   LEADER_CLAMP_MARGIN,
   MAX_DT,
-  VIEW_H,
   VIEW_W,
 } from "./constants.ts";
 import styles from "./Game.module.css";
@@ -15,33 +15,81 @@ import {
   drawLeaderGlyph,
   drawUnits,
 } from "./render/entities.ts";
-import type { Viewport } from "./render/field.ts";
 import { drawBackground, drawGoalLine } from "./render/field.ts";
 import { loadThemeAssets } from "./theme/assetLoader.ts";
 import theme from "./theme/themeConfig.ts";
 import { Hud } from "./ui/Hud.tsx";
 import { Overlay } from "./ui/Overlay.tsx";
-
-const VIEWPORT: Viewport = { viewW: VIEW_W, viewH: VIEW_H };
+import { computeScale, computeViewport } from "./viewport.ts";
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+const chromeBgImage = theme.chrome.backgroundImageSrc
+  ? `url(${theme.chrome.backgroundImageSrc})`
+  : "none";
+const chromeSideImage = theme.chrome.sidePanelImageSrc
+  ? `url(${theme.chrome.sidePanelImageSrc})`
+  : "none";
+const chromeFrameBorder = theme.chrome.frameBorderColor
+  ? `2px solid ${theme.chrome.frameBorderColor}`
+  : "none";
+
 function Game() {
+  let rootRef: HTMLDivElement | undefined;
   let canvasRef: HTMLCanvasElement | undefined;
+  let frameRef: HTMLDivElement | undefined;
   let hudValueRef: HTMLDivElement | undefined;
   let ctx: CanvasRenderingContext2D | undefined;
   let rafId = 0;
   let lastTime: number | undefined;
-  let world = createWorldState();
+  let viewport = computeViewport(window.innerWidth, window.innerHeight);
+  let world = createWorldState(viewport);
   const images = loadThemeAssets(theme.assets);
   const [unitCount, setUnitCount] = createSignal(world.units.length);
   const [progressPercent, setProgressPercent] = createSignal(0);
   const [gamePhase, setGamePhase] = createSignal<GamePhase>("running");
 
+  function applyFrameLayout() {
+    const frame = frameRef;
+    if (!frame) return;
+    frame.style.width = `${viewport.viewW * viewport.scale}px`;
+    frame.style.height = `${viewport.viewH * viewport.scale}px`;
+  }
+
+  function applyBackingStore() {
+    const canvas = canvasRef;
+    if (!canvas) return;
+    const dprCapped = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+    const total = Math.min(viewport.scale * dprCapped, BACKING_SCALE_CAP);
+    canvas.width = Math.round(viewport.viewW * total);
+    canvas.height = Math.round(viewport.viewH * total);
+    ctx?.setTransform(total, 0, 0, total, 0, 0);
+  }
+
+  function applyLayout() {
+    applyFrameLayout();
+    applyBackingStore();
+  }
+
+  function handleResize() {
+    viewport = {
+      ...viewport,
+      scale: computeScale(
+        window.innerWidth,
+        window.innerHeight,
+        viewport.viewW,
+        viewport.viewH,
+      ),
+    };
+    applyLayout();
+  }
+
   function retry() {
-    world = createWorldState();
+    viewport = computeViewport(window.innerWidth, window.innerHeight);
+    world = createWorldState(viewport);
+    applyLayout();
     setUnitCount(world.units.length);
     setProgressPercent(0);
     setGamePhase("running");
@@ -56,7 +104,7 @@ function Game() {
   }
 
   function update(dt: number) {
-    const events = stepWorld(world, VIEWPORT, theme, dt, Math.random);
+    const events = stepWorld(world, viewport, theme, dt, Math.random);
 
     if (events.gateResolved) {
       setUnitCount(events.gateResolved.newCount);
@@ -100,12 +148,12 @@ function Game() {
 
   function render() {
     if (!ctx) return;
-    drawBackground(ctx, theme, images, VIEWPORT, world.distance);
-    drawGoalLine(ctx, theme, images, VIEWPORT, world.distance);
-    drawGateRows(ctx, theme, images, VIEWPORT, world.rows);
-    drawUnits(ctx, theme, images, VIEWPORT, world.units, world.elapsed);
-    drawLeaderGlyph(ctx, theme, images, VIEWPORT, world.leaderX, world.elapsed);
-    drawFloatTexts(ctx, VIEWPORT, world.effects);
+    drawBackground(ctx, theme, images, viewport, world.distance);
+    drawGoalLine(ctx, theme, images, viewport, world.distance);
+    drawGateRows(ctx, theme, images, viewport, world.rows);
+    drawUnits(ctx, theme, images, viewport, world.units, world.elapsed);
+    drawLeaderGlyph(ctx, theme, images, viewport, world.leaderX, world.elapsed);
+    drawFloatTexts(ctx, viewport, world.effects);
   }
 
   function frame(time: number) {
@@ -124,10 +172,13 @@ function Game() {
     ctx = canvas.getContext("2d") ?? undefined;
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-    canvas.width = VIEW_W * dpr;
-    canvas.height = VIEW_H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    applyLayout();
+
+    if (rootRef) {
+      const observer = new ResizeObserver(handleResize);
+      observer.observe(rootRef);
+      onCleanup(() => observer.disconnect());
+    }
 
     rafId = requestAnimationFrame(frame);
   });
@@ -137,8 +188,19 @@ function Game() {
   });
 
   return (
-    <div class={styles.root}>
+    <div
+      ref={rootRef}
+      class={styles.root}
+      style={{
+        "--chrome-bg-color": theme.chrome.backgroundColor,
+        "--chrome-bg-image": chromeBgImage,
+        "--chrome-side-image": chromeSideImage,
+        "--chrome-frame-border": chromeFrameBorder,
+      }}
+    >
+      <div class={styles.sidePanel} />
       <div
+        ref={frameRef}
         class={styles.frame}
         style={{
           "--player-color": theme.player.color,
@@ -168,6 +230,7 @@ function Game() {
           onRetry={retry}
         />
       </div>
+      <div class={styles.sidePanel} />
     </div>
   );
 }

@@ -4,8 +4,8 @@ import {
   GATE_CELL_RIGHT_X,
   GATE_CELL_WIDTH,
   GLYPH_ROT_SPEED,
+  LEADER_BOTTOM_OFFSET,
   LEADER_GLYPH_RADIUS,
-  LEADER_Y,
   ROW_HEIGHT,
   UNIT_RADIUS,
 } from "../constants.ts";
@@ -13,7 +13,7 @@ import type { FloatText, GateRow, Unit } from "../logic/types.ts";
 import type { LoadedImages } from "../theme/assetLoader.ts";
 import { getSprite } from "../theme/assetLoader.ts";
 import type { GateKind, ThemeAssetConfig } from "../theme/themeConfig.ts";
-import type { Viewport } from "./field.ts";
+import type { Viewport } from "../viewport.ts";
 
 const GATE_ASSET_KEYS: Record<
   GateKind,
@@ -143,15 +143,16 @@ export function drawLeaderGlyph(
   ctx: CanvasRenderingContext2D,
   theme: ThemeAssetConfig,
   images: LoadedImages,
-  _viewport: Viewport,
+  viewport: Viewport,
   leaderX: number,
   elapsed: number,
 ) {
   const sprite = getSprite(theme, images, "leaderGlyph");
   const rotation = elapsed * GLYPH_ROT_SPEED;
+  const leaderY = viewport.viewH - LEADER_BOTTOM_OFFSET;
 
   ctx.save();
-  ctx.translate(leaderX, LEADER_Y);
+  ctx.translate(leaderX, leaderY);
   ctx.rotate(rotation);
 
   if (sprite) {

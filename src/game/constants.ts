@@ -1,10 +1,12 @@
 export const VIEW_W = 360;
-export const VIEW_H = 640;
+export const VIEW_H_MIN = 640;
+export const VIEW_H_MAX = 900;
 export const DPR_CAP = 2;
+export const BACKING_SCALE_CAP = 3;
 export const MAX_DT = 1 / 30;
 export const SCROLL_SPEED = 180;
 export const STRIPE_INTERVAL = 80;
-export const LEADER_Y = 520;
+export const LEADER_BOTTOM_OFFSET = 120;
 export const LEADER_GLYPH_RADIUS = 14;
 export const GLYPH_ROT_SPEED = 1.2;
 export const LEADER_LERP_RATE = 12;
