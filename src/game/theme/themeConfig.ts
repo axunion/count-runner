@@ -4,18 +4,34 @@ export interface PlayerConfig {
   readonly label: string;
   readonly color: string;
   readonly glyphColor: string;
+  readonly feverColor: string;
 }
 
 export interface GateTypeConfig {
   readonly kind: GateKind;
   readonly label: string;
   readonly color: string;
+  readonly displayPrefix: string;
+  /** @deprecated replaced by per-cell rolled value (rollGateValue). Removed in Step G1. */
   readonly value: number;
+  /** @deprecated replaced by per-cell displayValue. Removed in Step G1. */
   readonly displayValue: string;
+}
+
+export interface EnemyConfig {
+  readonly label: string;
+  readonly color: string;
+}
+
+export interface BossConfig {
+  readonly label: string;
+  readonly color: string;
+  readonly hpLabel: string;
 }
 
 export interface HudConfig {
   readonly scoreLabel: string;
+  readonly comboLabel: string;
 }
 
 export interface OverlayConfig {
@@ -23,6 +39,9 @@ export interface OverlayConfig {
   readonly gameOverTitle: string;
   readonly retryLabel: string;
   readonly resultLabel: string;
+  readonly scoreLabel: string;
+  readonly bestLabel: string;
+  readonly newRecordLabel: string;
 }
 
 export interface FieldConfig {
@@ -30,6 +49,13 @@ export interface FieldConfig {
   readonly stripeColor: string;
   readonly goalLineColor: string;
   readonly goalLabel: string;
+}
+
+export interface ChromeConfig {
+  readonly backgroundColor: string;
+  readonly backgroundImageSrc?: string;
+  readonly sidePanelImageSrc?: string;
+  readonly frameBorderColor?: string;
 }
 
 export interface SpriteAsset {
@@ -42,10 +68,12 @@ export interface SpriteAsset {
 
 export interface ThemeAssets {
   readonly unit?: SpriteAsset;
+  readonly enemyUnit?: SpriteAsset;
   readonly leaderGlyph?: SpriteAsset;
   readonly gateAdd?: SpriteAsset;
   readonly gateMultiply?: SpriteAsset;
   readonly gateSubtract?: SpriteAsset;
+  readonly boss?: SpriteAsset;
   readonly background?: SpriteAsset;
   readonly goalBanner?: SpriteAsset;
   readonly overlayClear?: SpriteAsset;
@@ -56,9 +84,12 @@ export interface ThemeAssetConfig {
   readonly name: string;
   readonly player: PlayerConfig;
   readonly gates: Record<GateKind, GateTypeConfig>;
+  readonly enemy: EnemyConfig;
+  readonly boss: BossConfig;
   readonly hud: HudConfig;
   readonly overlay: OverlayConfig;
   readonly field: FieldConfig;
+  readonly chrome: ChromeConfig;
   readonly assets: ThemeAssets;
 }
 
@@ -68,12 +99,14 @@ const fantasyTheme = {
     label: "Apprentice Mage",
     color: "#1d4ed8",
     glyphColor: "#93c5fd",
+    feverColor: "#fde047",
   },
   gates: {
     add: {
       kind: "add",
       label: "Mana Font",
       color: "#10b981",
+      displayPrefix: "+",
       value: 5,
       displayValue: "+5",
     },
@@ -81,6 +114,7 @@ const fantasyTheme = {
       kind: "multiply",
       label: "Chronos Gate",
       color: "#8b5cf6",
+      displayPrefix: "x",
       value: 2,
       displayValue: "x2",
     },
@@ -88,24 +122,41 @@ const fantasyTheme = {
       kind: "subtract",
       label: "Gargoyle Wall",
       color: "#b91c1c",
+      displayPrefix: "-",
       value: 3,
       displayValue: "-3",
     },
   },
+  enemy: {
+    label: "Stone Legion",
+    color: "#dc2626",
+  },
+  boss: {
+    label: "Gate Guardian",
+    color: "#7f1d1d",
+    hpLabel: "GUARDIAN HP",
+  },
   hud: {
     scoreLabel: "MANA POWER",
+    comboLabel: "ARCANE CHAIN",
   },
   overlay: {
     clearTitle: "Quest Clear!",
     gameOverTitle: "The Party Has Fallen",
     retryLabel: "Retry",
     resultLabel: "MANA POWER",
+    scoreLabel: "SCORE",
+    bestLabel: "BEST",
+    newRecordLabel: "NEW RECORD!",
   },
   field: {
     backgroundColor: "#0f172a",
     stripeColor: "#1e293b",
     goalLineColor: "#fbbf24",
     goalLabel: "SANCTUM",
+  },
+  chrome: {
+    backgroundColor: "#020617",
   },
   assets: {},
 } satisfies ThemeAssetConfig;

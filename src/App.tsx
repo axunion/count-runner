@@ -1,7 +1,7 @@
-import GamePrototype from "./game/GamePrototype.tsx";
+import Game from "./game/Game.tsx";
 
 function App() {
-  return <GamePrototype />;
+  return <Game />;
 }
 
 export default App;
