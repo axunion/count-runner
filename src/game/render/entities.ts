@@ -1,4 +1,5 @@
 import {
+  FEVER_GLYPH_SCALE,
   FLOAT_LIFETIME,
   GATE_CELL_LEFT_X,
   GATE_CELL_RIGHT_X,
@@ -9,11 +10,12 @@ import {
   ROW_HEIGHT,
   UNIT_RADIUS,
 } from "../constants.ts";
-import type { FloatText, GateRow, Unit } from "../logic/types.ts";
+import type { FloatText, GateCell, GateRow, Unit } from "../logic/types.ts";
 import type { LoadedImages } from "../theme/assetLoader.ts";
 import { getSprite } from "../theme/assetLoader.ts";
 import type { GateKind, ThemeAssetConfig } from "../theme/themeConfig.ts";
 import type { Viewport } from "../viewport.ts";
+import { drawGuardCluster } from "./boss.ts";
 
 const GATE_ASSET_KEYS: Record<
   GateKind,
@@ -28,15 +30,15 @@ function drawGateCell(
   ctx: CanvasRenderingContext2D,
   theme: ThemeAssetConfig,
   images: LoadedImages,
-  kind: GateKind,
+  cell: GateCell,
   x: number,
   y: number,
   width: number,
   height: number,
   resolved: boolean,
 ) {
-  const gate = theme.gates[kind];
-  const sprite = getSprite(theme, images, GATE_ASSET_KEYS[kind]);
+  const gate = theme.gates[cell.kind];
+  const sprite = getSprite(theme, images, GATE_ASSET_KEYS[cell.kind]);
   const centerX = x + width / 2;
   const centerY = y + height / 2;
 
@@ -59,7 +61,7 @@ function drawGateCell(
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.font = "bold 22px sans-serif";
-  ctx.fillText(gate.displayValue, centerX, sprite ? centerY : centerY - 6);
+  ctx.fillText(cell.displayValue, centerX, sprite ? centerY : centerY - 6);
 
   if (!sprite) {
     ctx.font = "9px sans-serif";
@@ -78,7 +80,7 @@ export function drawGateRows(
 ) {
   for (const row of rows) {
     const cellY = row.y - ROW_HEIGHT / 2;
-    for (const [x, kind] of [
+    for (const [x, cell] of [
       [GATE_CELL_LEFT_X, row.left],
       [GATE_CELL_RIGHT_X, row.right],
     ] as const) {
@@ -86,13 +88,22 @@ export function drawGateRows(
         ctx,
         theme,
         images,
-        kind,
+        cell,
         x,
         cellY,
         GATE_CELL_WIDTH,
         ROW_HEIGHT,
         row.resolved,
       );
+      if (cell.guard !== undefined && !row.resolved) {
+        drawGuardCluster(
+          ctx,
+          theme,
+          x + GATE_CELL_WIDTH / 2,
+          cellY + ROW_HEIGHT,
+          cell.guard,
+        );
+      }
     }
   }
 }
@@ -146,14 +157,17 @@ export function drawLeaderGlyph(
   viewport: Viewport,
   leaderX: number,
   elapsed: number,
+  feverActive: boolean,
 ) {
   const sprite = getSprite(theme, images, "leaderGlyph");
   const rotation = elapsed * GLYPH_ROT_SPEED;
   const leaderY = viewport.viewH - LEADER_BOTTOM_OFFSET;
+  const glyphScale = feverActive ? FEVER_GLYPH_SCALE : 1;
 
   ctx.save();
   ctx.translate(leaderX, leaderY);
   ctx.rotate(rotation);
+  ctx.scale(glyphScale, glyphScale);
 
   if (sprite) {
     ctx.drawImage(
@@ -167,7 +181,9 @@ export function drawLeaderGlyph(
     return;
   }
 
-  ctx.strokeStyle = theme.player.glyphColor;
+  ctx.strokeStyle = feverActive
+    ? theme.player.feverColor
+    : theme.player.glyphColor;
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.arc(0, 0, LEADER_GLYPH_RADIUS, 0, Math.PI * 2);

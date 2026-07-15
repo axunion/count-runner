@@ -12,10 +12,6 @@ export interface GateTypeConfig {
   readonly label: string;
   readonly color: string;
   readonly displayPrefix: string;
-  /** @deprecated replaced by per-cell rolled value (rollGateValue). Removed in Step G1. */
-  readonly value: number;
-  /** @deprecated replaced by per-cell displayValue. Removed in Step G1. */
-  readonly displayValue: string;
 }
 
 export interface EnemyConfig {
@@ -107,24 +103,18 @@ const fantasyTheme = {
       label: "Mana Font",
       color: "#10b981",
       displayPrefix: "+",
-      value: 5,
-      displayValue: "+5",
     },
     multiply: {
       kind: "multiply",
       label: "Chronos Gate",
       color: "#8b5cf6",
       displayPrefix: "x",
-      value: 2,
-      displayValue: "x2",
     },
     subtract: {
       kind: "subtract",
       label: "Gargoyle Wall",
       color: "#b91c1c",
       displayPrefix: "-",
-      value: 3,
-      displayValue: "-3",
     },
   },
   enemy: {

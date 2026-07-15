@@ -7,8 +7,11 @@ import {
   VIEW_W,
 } from "./constants.ts";
 import styles from "./Game.module.css";
+import type { ScoreResult } from "./logic/score.ts";
+import { recordScore } from "./logic/score.ts";
 import type { GamePhase } from "./logic/types.ts";
 import { createWorldState, stepWorld } from "./logic/world.ts";
+import { drawBoss } from "./render/boss.ts";
 import {
   drawFloatTexts,
   drawGateRows,
@@ -50,6 +53,9 @@ function Game() {
   const [unitCount, setUnitCount] = createSignal(world.units.length);
   const [progressPercent, setProgressPercent] = createSignal(0);
   const [gamePhase, setGamePhase] = createSignal<GamePhase>("running");
+  const [combo, setCombo] = createSignal(0);
+  const [isFever, setIsFever] = createSignal(false);
+  const [result, setResult] = createSignal<ScoreResult | null>(null);
 
   function applyFrameLayout() {
     const frame = frameRef;
@@ -93,6 +99,9 @@ function Game() {
     setUnitCount(world.units.length);
     setProgressPercent(0);
     setGamePhase("running");
+    setCombo(0);
+    setIsFever(false);
+    setResult(null);
   }
 
   function triggerHudPunch() {
@@ -108,14 +117,27 @@ function Game() {
 
     if (events.gateResolved) {
       setUnitCount(events.gateResolved.newCount);
+      setCombo(events.gateResolved.newCombo);
       triggerHudPunch();
+    }
+    if (events.unitCountChanged !== undefined) {
+      setUnitCount(events.unitCountChanged);
     }
     if (events.progressPercent !== undefined) {
       setProgressPercent(events.progressPercent);
     }
+    if (events.enteredFinale) {
+      setGamePhase("finale");
+    }
     if (events.finished) {
       setGamePhase(events.finished);
+      if (events.finished === "cleared") {
+        setResult(recordScore(world.units.length, world.maxCombo));
+      }
     }
+
+    const feverActive = world.feverTimer > 0;
+    if (feverActive !== isFever()) setIsFever(feverActive);
   }
 
   function updateTargetFromClientX(clientX: number) {
@@ -138,7 +160,7 @@ function Game() {
   }
 
   function handlePointerMove(e: PointerEvent) {
-    if (!world.pointerActive) return;
+    if (gamePhase() !== "running" || !world.pointerActive) return;
     updateTargetFromClientX(e.clientX);
   }
 
@@ -152,14 +174,26 @@ function Game() {
     drawGoalLine(ctx, theme, images, viewport, world.distance);
     drawGateRows(ctx, theme, images, viewport, world.rows);
     drawUnits(ctx, theme, images, viewport, world.units, world.elapsed);
-    drawLeaderGlyph(ctx, theme, images, viewport, world.leaderX, world.elapsed);
+    drawLeaderGlyph(
+      ctx,
+      theme,
+      images,
+      viewport,
+      world.leaderX,
+      world.elapsed,
+      world.feverTimer > 0,
+    );
+    if (world.boss) {
+      drawBoss(ctx, theme, images, viewport.viewW, world.boss.hp);
+    }
     drawFloatTexts(ctx, viewport, world.effects);
   }
 
   function frame(time: number) {
     if (lastTime !== undefined) {
       const dt = Math.min((time - lastTime) / 1000, MAX_DT);
-      if (gamePhase() === "running") update(dt);
+      const phase = gamePhase();
+      if (phase === "running" || phase === "finale") update(dt);
     }
     lastTime = time;
     render();
@@ -205,6 +239,7 @@ function Game() {
         style={{
           "--player-color": theme.player.color,
           "--goal-color": theme.field.goalLineColor,
+          "--fever-color": theme.player.feverColor,
         }}
       >
         <canvas
@@ -218,6 +253,8 @@ function Game() {
         <Hud
           theme={theme}
           unitCount={unitCount()}
+          combo={combo()}
+          isFever={isFever()}
           progressPercent={progressPercent()}
           valueRef={(el) => {
             hudValueRef = el;
@@ -227,6 +264,7 @@ function Game() {
           theme={theme}
           gamePhase={gamePhase()}
           unitCount={unitCount()}
+          result={result()}
           onRetry={retry}
         />
       </div>

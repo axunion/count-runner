@@ -1,5 +1,6 @@
 import { Show } from "solid-js";
 import styles from "../Game.module.css";
+import type { ScoreResult } from "../logic/score.ts";
 import type { GamePhase } from "../logic/types.ts";
 import type { ThemeAssetConfig } from "../theme/themeConfig.ts";
 
@@ -7,6 +8,7 @@ interface OverlayProps {
   theme: ThemeAssetConfig;
   gamePhase: GamePhase;
   unitCount: number;
+  result: ScoreResult | null;
   onRetry: () => void;
 }
 
@@ -40,6 +42,23 @@ export function Overlay(props: OverlayProps) {
         <div class={styles.overlayScore}>
           {props.theme.overlay.resultLabel}: {props.unitCount}
         </div>
+        <Show when={props.result}>
+          {(result) => (
+            <>
+              <div class={styles.overlayScore}>
+                {props.theme.overlay.scoreLabel}: {result().score}
+              </div>
+              <div class={styles.overlayScore}>
+                {props.theme.overlay.bestLabel}: {result().best}
+              </div>
+              <Show when={result().isNewRecord}>
+                <div class={styles.newRecordBadge}>
+                  {props.theme.overlay.newRecordLabel}
+                </div>
+              </Show>
+            </>
+          )}
+        </Show>
         <button
           type="button"
           class={styles.retryButton}

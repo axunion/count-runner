@@ -56,6 +56,16 @@
   animation: hud-punch 200ms ease-out;
 }
 
+.hudCombo {
+  text-align: center;
+  opacity: 0.6;
+}
+
+.hudCombo.fever {
+  opacity: 1;
+  color: var(--fever-color);
+}
+
 @keyframes hud-punch {
   0% {
     transform: scale(1);
@@ -103,6 +113,12 @@
 
 .overlayScore {
   font-size: 16px;
+}
+
+.newRecordBadge {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--goal-color);
 }
 
 .retryButton {

@@ -8,14 +8,26 @@ export interface Unit {
   wobblePhase: number;
 }
 
+export interface GateCell {
+  kind: GateKind;
+  value: number;
+  displayValue: string;
+  guard?: number;
+}
+
 export interface GateRow {
   y: number;
-  left: GateKind;
-  right: GateKind;
+  left: GateCell;
+  right: GateCell;
   resolved: boolean;
 }
 
-export type GamePhase = "ready" | "running" | "cleared" | "gameover";
+export type GamePhase = "ready" | "running" | "finale" | "cleared" | "gameover";
+
+export interface Boss {
+  hp: number;
+  y: number;
+}
 
 export interface FloatText {
   text: string;
@@ -37,4 +49,9 @@ export interface WorldState {
   nextRowDistance: number;
   effects: FloatText[];
   progressPercent: number;
+  combo: number;
+  maxCombo: number;
+  feverTimer: number;
+  boss: Boss | null;
+  battleCarry: number;
 }
