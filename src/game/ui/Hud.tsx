@@ -5,9 +5,9 @@ interface HudProps {
   theme: ThemeAssetConfig;
   unitCount: number;
   combo: number;
-  isFever: boolean;
   progressPercent: number;
   valueRef?: (el: HTMLDivElement) => void;
+  comboRef?: (el: HTMLDivElement) => void;
 }
 
 export function Hud(props: HudProps) {
@@ -19,10 +19,7 @@ export function Hud(props: HudProps) {
           {props.unitCount}
         </div>
       </div>
-      <div
-        class={styles.hudCombo}
-        classList={{ [styles.fever]: props.isFever }}
-      >
+      <div ref={props.comboRef} class={styles.hudCombo}>
         <div class={styles.hudLabel}>{props.theme.hud.comboLabel}</div>
         <div>{props.combo}</div>
       </div>

@@ -44,6 +44,7 @@ function Game() {
   let canvasRef: HTMLCanvasElement | undefined;
   let frameRef: HTMLDivElement | undefined;
   let hudValueRef: HTMLDivElement | undefined;
+  let hudComboRef: HTMLDivElement | undefined;
   let ctx: CanvasRenderingContext2D | undefined;
   let rafId = 0;
   let lastTime: number | undefined;
@@ -54,7 +55,6 @@ function Game() {
   const [progressPercent, setProgressPercent] = createSignal(0);
   const [gamePhase, setGamePhase] = createSignal<GamePhase>("running");
   const [combo, setCombo] = createSignal(0);
-  const [isFever, setIsFever] = createSignal(false);
   const [result, setResult] = createSignal<ScoreResult | null>(null);
 
   function applyFrameLayout() {
@@ -100,7 +100,7 @@ function Game() {
     setProgressPercent(0);
     setGamePhase("running");
     setCombo(0);
-    setIsFever(false);
+    hudComboRef?.classList.remove(styles.fever);
     setResult(null);
   }
 
@@ -119,6 +119,9 @@ function Game() {
       setUnitCount(events.gateResolved.newCount);
       setCombo(events.gateResolved.newCombo);
       triggerHudPunch();
+      if (events.gateResolved.feverTriggered) {
+        hudComboRef?.classList.add(styles.fever);
+      }
     }
     if (events.unitCountChanged !== undefined) {
       setUnitCount(events.unitCountChanged);
@@ -136,8 +139,9 @@ function Game() {
       }
     }
 
-    const feverActive = world.feverTimer > 0;
-    if (feverActive !== isFever()) setIsFever(feverActive);
+    if (world.feverTimer <= 0) {
+      hudComboRef?.classList.remove(styles.fever);
+    }
   }
 
   function updateTargetFromClientX(clientX: number) {
@@ -254,10 +258,12 @@ function Game() {
           theme={theme}
           unitCount={unitCount()}
           combo={combo()}
-          isFever={isFever()}
           progressPercent={progressPercent()}
           valueRef={(el) => {
             hudValueRef = el;
+          }}
+          comboRef={(el) => {
+            hudComboRef = el;
           }}
         />
         <Overlay

@@ -24,6 +24,7 @@ import {
   ROW_INTERVAL,
   SCROLL_SPEED_BASE,
   SCROLL_SPEED_MAX,
+  SPAWN_JITTER,
   UNIT_FOLLOW_RATE,
   UNIT_RADIUS,
   VIEW_W,
@@ -251,8 +252,9 @@ function applyGateEffect(
     world.feverTimer > 0 ? applyFeverBonus(current, rawNext) : rawNext;
 
   if (next > current) {
+    const jitterRange = SPAWN_JITTER * 2;
     for (let i = current; i < next; i++) {
-      const x = spawnX + (Math.random() * 40 - 20);
+      const x = spawnX + Math.random() * jitterRange - SPAWN_JITTER;
       world.units.push(createUnit(x, spawnY, 0, 0));
     }
   } else if (next < current) {

@@ -14,6 +14,7 @@ export const LEADER_GLYPH_RADIUS = 14;
 export const GLYPH_ROT_SPEED = 1.2;
 export const LEADER_LERP_RATE = 12;
 export const LEADER_CLAMP_MARGIN = 24;
+export const SPAWN_JITTER = 20;
 export const UNIT_FOLLOW_RATE = 8;
 export const UNIT_RADIUS = 5;
 export const FORMATION_SPACING = 7;
