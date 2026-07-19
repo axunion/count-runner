@@ -7,6 +7,8 @@ import {
   ROW_HEIGHT,
   UNIT_RADIUS,
 } from "../constants.ts";
+import type { ResolveFeedback } from "../logic/feedback.ts";
+import { resolveFeedback } from "../logic/feedback.ts";
 import { boundaryXAt, cellRects } from "../logic/rows.ts";
 import type { FloatText, GateCell, GateRow, Unit } from "../logic/types.ts";
 import type { LoadedImages } from "../theme/assetLoader.ts";
@@ -33,7 +35,7 @@ function drawGateCell(
   y: number,
   width: number,
   height: number,
-  resolved: boolean,
+  feedback: ResolveFeedback | null,
 ) {
   const gate = theme.gates[cell.kind];
   const sprite = getSprite(theme, images, GATE_ASSET_KEYS[cell.kind]);
@@ -41,7 +43,7 @@ function drawGateCell(
   const centerY = y + height / 2;
 
   ctx.save();
-  ctx.globalAlpha = resolved ? 0.25 : 0.85;
+  ctx.globalAlpha = feedback ? feedback.alpha : 0.85;
 
   if (sprite) {
     ctx.drawImage(sprite.img, x, y, width, height);
@@ -64,6 +66,15 @@ function drawGateCell(
   if (!sprite) {
     ctx.font = "9px sans-serif";
     ctx.fillText(gate.label, centerX, centerY + 12);
+  }
+
+  if (feedback && feedback.ringAlpha > 0) {
+    ctx.globalAlpha = feedback.ringAlpha;
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(x - 2, y - 2, width + 4, height + 4, 10);
+    ctx.stroke();
   }
 
   ctx.restore();
@@ -101,10 +112,14 @@ export function drawGateRows(
     if (row.speedMult > 1 && !row.resolved) {
       drawFastRowTelegraph(ctx, theme, cellY);
     }
-    for (const [rect, cell] of [
-      [rects.left, row.left],
-      [rects.right, row.right],
+    for (const [rect, cell, side] of [
+      [rects.left, row.left, "left"],
+      [rects.right, row.right, "right"],
     ] as const) {
+      const feedback =
+        row.resolved && row.resolvedAt !== undefined
+          ? resolveFeedback(side === row.chosenSide, elapsed - row.resolvedAt)
+          : null;
       drawGateCell(
         ctx,
         theme,
@@ -114,7 +129,7 @@ export function drawGateRows(
         cellY,
         rect.width,
         ROW_HEIGHT,
-        row.resolved,
+        feedback,
       );
       if (cell.guard !== undefined && !row.resolved) {
         drawGuardCluster(

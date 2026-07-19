@@ -50,6 +50,9 @@ export const ROW_CLUSTER_RATE = 0.15;
 export const ROW_CLUSTER_GAP = 150;
 export const ROW_BREATHER_RATE = 0.15;
 export const ROW_BREATHER_MULT = 1.5;
+export const RESOLVE_CHOSEN_HOLD = 0.35;
+export const RESOLVE_RING_LIFETIME = 0.4;
+export const RESOLVE_UNCHOSEN_FADE = 0.25;
 
 export const ROW_GAP_BASE = {
   phase1: 300,
