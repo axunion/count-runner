@@ -7,6 +7,7 @@ import {
   VIEW_W,
 } from "./constants.ts";
 import styles from "./Game.module.css";
+import { keyboardDir, nextTargetX } from "./logic/input.ts";
 import type { ScoreResult } from "./logic/score.ts";
 import { recordScore } from "./logic/score.ts";
 import type { GamePhase } from "./logic/types.ts";
@@ -50,6 +51,8 @@ function Game() {
   let lastTime: number | undefined;
   let viewport = computeViewport(window.innerWidth, window.innerHeight);
   let world = createWorldState(viewport);
+  let keyLeft = false;
+  let keyRight = false;
   const images = loadThemeAssets(theme.assets);
   const [unitCount, setUnitCount] = createSignal(world.units.length);
   const [progressPercent, setProgressPercent] = createSignal(0);
@@ -113,6 +116,10 @@ function Game() {
   }
 
   function update(dt: number) {
+    if (!world.pointerActive) {
+      const dir = keyboardDir(keyLeft, keyRight);
+      if (dir !== 0) world.targetX = nextTargetX(world.targetX, dir, dt);
+    }
     const events = stepWorld(world, viewport, theme, dt, Math.random);
 
     if (events.gateResolved) {
@@ -172,6 +179,35 @@ function Game() {
     world.pointerActive = false;
   }
 
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+      e.preventDefault();
+      keyLeft = true;
+    } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+      e.preventDefault();
+      keyRight = true;
+    } else if (e.key === "Enter" || e.key === " ") {
+      const phase = gamePhase();
+      if (phase === "cleared" || phase === "gameover") {
+        e.preventDefault();
+        retry();
+      }
+    }
+  }
+
+  function handleKeyUp(e: KeyboardEvent) {
+    if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+      keyLeft = false;
+    } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+      keyRight = false;
+    }
+  }
+
+  function handleBlur() {
+    keyLeft = false;
+    keyRight = false;
+  }
+
   function render() {
     if (!ctx) return;
     drawBackground(ctx, theme, images, viewport, world.distance);
@@ -217,6 +253,15 @@ function Game() {
       observer.observe(rootRef);
       onCleanup(() => observer.disconnect());
     }
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("blur", handleBlur);
+    onCleanup(() => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("blur", handleBlur);
+    });
 
     rafId = requestAnimationFrame(frame);
   });
