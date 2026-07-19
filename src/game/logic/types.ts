@@ -15,11 +15,22 @@ export interface GateCell {
   guard?: number;
 }
 
+export interface RowOscillation {
+  amp: number;
+  period: number;
+  phase: number;
+}
+
 export interface GateRow {
   y: number;
   left: GateCell;
   right: GateCell;
   resolved: boolean;
+  boundaryX: number;
+  oscillation?: RowOscillation;
+  speedMult: number;
+  chosenSide?: "left" | "right";
+  resolvedAt?: number;
 }
 
 export type GamePhase = "ready" | "running" | "finale" | "cleared" | "gameover";

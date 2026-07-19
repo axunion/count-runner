@@ -1,15 +1,13 @@
 import {
   FEVER_GLYPH_SCALE,
   FLOAT_LIFETIME,
-  GATE_CELL_LEFT_X,
-  GATE_CELL_RIGHT_X,
-  GATE_CELL_WIDTH,
   GLYPH_ROT_SPEED,
   LEADER_BOTTOM_OFFSET,
   LEADER_GLYPH_RADIUS,
   ROW_HEIGHT,
   UNIT_RADIUS,
 } from "../constants.ts";
+import { boundaryXAt, cellRects } from "../logic/rows.ts";
 import type { FloatText, GateCell, GateRow, Unit } from "../logic/types.ts";
 import type { LoadedImages } from "../theme/assetLoader.ts";
 import { getSprite } from "../theme/assetLoader.ts";
@@ -71,27 +69,50 @@ function drawGateCell(
   ctx.restore();
 }
 
+function drawFastRowTelegraph(
+  ctx: CanvasRenderingContext2D,
+  theme: ThemeAssetConfig,
+  cellY: number,
+) {
+  ctx.save();
+  ctx.strokeStyle = theme.field.goalLineColor;
+  ctx.globalAlpha = 0.7;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (const x of [120, 180, 240]) {
+    ctx.moveTo(x, cellY - 16);
+    ctx.lineTo(x, cellY - 5);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
 export function drawGateRows(
   ctx: CanvasRenderingContext2D,
   theme: ThemeAssetConfig,
   images: LoadedImages,
   _viewport: Viewport,
   rows: GateRow[],
+  elapsed: number,
 ) {
   for (const row of rows) {
     const cellY = row.y - ROW_HEIGHT / 2;
-    for (const [x, cell] of [
-      [GATE_CELL_LEFT_X, row.left],
-      [GATE_CELL_RIGHT_X, row.right],
+    const rects = cellRects(boundaryXAt(row, elapsed));
+    if (row.speedMult > 1 && !row.resolved) {
+      drawFastRowTelegraph(ctx, theme, cellY);
+    }
+    for (const [rect, cell] of [
+      [rects.left, row.left],
+      [rects.right, row.right],
     ] as const) {
       drawGateCell(
         ctx,
         theme,
         images,
         cell,
-        x,
+        rect.x,
         cellY,
-        GATE_CELL_WIDTH,
+        rect.width,
         ROW_HEIGHT,
         row.resolved,
       );
@@ -99,7 +120,7 @@ export function drawGateRows(
         drawGuardCluster(
           ctx,
           theme,
-          x + GATE_CELL_WIDTH / 2,
+          rect.x + rect.width / 2,
           cellY + ROW_HEIGHT,
           cell.guard,
         );

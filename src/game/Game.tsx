@@ -212,7 +212,7 @@ function Game() {
     if (!ctx) return;
     drawBackground(ctx, theme, images, viewport, world.distance);
     drawGoalLine(ctx, theme, images, viewport, world.distance);
-    drawGateRows(ctx, theme, images, viewport, world.rows);
+    drawGateRows(ctx, theme, images, viewport, world.rows, world.elapsed);
     drawUnits(ctx, theme, images, viewport, world.units, world.elapsed);
     drawLeaderGlyph(
       ctx,

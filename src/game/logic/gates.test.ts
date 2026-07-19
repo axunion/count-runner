@@ -23,12 +23,12 @@ describe("applyGate", () => {
     expect(applyGate("subtract", 3, 2)).toBe(0);
   });
 
-  it("caps add at MAX_UNITS (300)", () => {
-    expect(applyGate("add", 5, 298)).toBe(300);
+  it("caps add at MAX_UNITS (120)", () => {
+    expect(applyGate("add", 5, 118)).toBe(120);
   });
 
-  it("caps multiply at MAX_UNITS (300)", () => {
-    expect(applyGate("multiply", 2, 200)).toBe(300);
+  it("caps multiply at MAX_UNITS (120)", () => {
+    expect(applyGate("multiply", 2, 80)).toBe(120);
   });
 });
 
@@ -167,70 +167,70 @@ describe("rollRowPattern", () => {
 describe("rollGateValue", () => {
   const rolls = Array.from({ length: 100 }, (_, i) => i / 100);
 
-  it("stays within the Phase 1 add range [4, 6] and reaches both ends", () => {
+  it("stays within the Phase 1 add range [2, 4] and reaches both ends", () => {
     const values = rolls.map((roll) => rollGateValue("add", 0, () => roll));
     for (const value of values) {
-      expect(value).toBeGreaterThanOrEqual(4);
-      expect(value).toBeLessThanOrEqual(6);
+      expect(value).toBeGreaterThanOrEqual(2);
+      expect(value).toBeLessThanOrEqual(4);
     }
+    expect(values).toContain(2);
     expect(values).toContain(4);
-    expect(values).toContain(6);
   });
 
-  it("stays within the Phase 2 add range [3, 8] and reaches both ends", () => {
+  it("stays within the Phase 2 add range [3, 6] and reaches both ends", () => {
     const values = rolls.map((roll) => rollGateValue("add", 2500, () => roll));
     for (const value of values) {
       expect(value).toBeGreaterThanOrEqual(3);
-      expect(value).toBeLessThanOrEqual(8);
+      expect(value).toBeLessThanOrEqual(6);
     }
     expect(values).toContain(3);
+    expect(values).toContain(6);
+  });
+
+  it("stays within the Phase 3 add range [4, 8] and reaches both ends", () => {
+    const values = rolls.map((roll) => rollGateValue("add", 4500, () => roll));
+    for (const value of values) {
+      expect(value).toBeGreaterThanOrEqual(4);
+      expect(value).toBeLessThanOrEqual(8);
+    }
+    expect(values).toContain(4);
     expect(values).toContain(8);
   });
 
-  it("stays within the Phase 3 add range [3, 10] and reaches both ends", () => {
-    const values = rolls.map((roll) => rollGateValue("add", 4500, () => roll));
-    for (const value of values) {
-      expect(value).toBeGreaterThanOrEqual(3);
-      expect(value).toBeLessThanOrEqual(10);
-    }
-    expect(values).toContain(3);
-    expect(values).toContain(10);
-  });
-
-  it("stays within the Phase 1 subtract range [2, 3] and reaches both ends", () => {
+  it("stays within the Phase 1 subtract range [1, 2] and reaches both ends", () => {
     const values = rolls.map((roll) =>
       rollGateValue("subtract", 0, () => roll),
     );
     for (const value of values) {
-      expect(value).toBeGreaterThanOrEqual(2);
-      expect(value).toBeLessThanOrEqual(3);
+      expect(value).toBeGreaterThanOrEqual(1);
+      expect(value).toBeLessThanOrEqual(2);
     }
+    expect(values).toContain(1);
     expect(values).toContain(2);
-    expect(values).toContain(3);
   });
 
-  it("stays within the Phase 2 subtract range [2, 6] and reaches both ends", () => {
+  it("stays within the Phase 2 subtract range [2, 4] and reaches both ends", () => {
     const values = rolls.map((roll) =>
       rollGateValue("subtract", 2500, () => roll),
     );
     for (const value of values) {
       expect(value).toBeGreaterThanOrEqual(2);
-      expect(value).toBeLessThanOrEqual(6);
+      expect(value).toBeLessThanOrEqual(4);
     }
     expect(values).toContain(2);
-    expect(values).toContain(6);
+    expect(values).toContain(4);
   });
 
-  it("stays within the Phase 3 subtract range [3, 8] and reaches both ends", () => {
+  it("stays within the Phase 3 subtract range [3, 6] and reaches both ends", () => {
     const values = rolls.map((roll) =>
       rollGateValue("subtract", 4500, () => roll),
     );
     for (const value of values) {
       expect(value).toBeGreaterThanOrEqual(3);
-      expect(value).toBeLessThanOrEqual(8);
+      expect(value).toBeLessThanOrEqual(6);
     }
     expect(values).toContain(3);
-    expect(values).toContain(8);
+    expect(values).toContain(6);
   });
 
   it("never rolls x3 in Phase 1 (x3 rate is 0%)", () => {

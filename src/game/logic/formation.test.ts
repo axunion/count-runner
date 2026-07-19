@@ -20,7 +20,7 @@ describe("formationOffset", () => {
   });
 
   it("keeps every index >= 1 on the SPACING*sqrt(i) ellipse (0.75 squashed)", () => {
-    const SPACING = 7;
+    const SPACING = 12;
     for (let i = 1; i <= 50; i++) {
       const { x, y } = formationOffset(i);
       const radius = Math.sqrt(x * x + (y / 0.75) * (y / 0.75));

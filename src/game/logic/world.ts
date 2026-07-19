@@ -2,14 +2,12 @@ import {
   BATTLE_DRAIN_RATE,
   BOSS_HP_BASE,
   BOSS_Y,
+  FAST_ROW_EXTRA_GAP_MULT,
   FEVER_DURATION,
   FEVER_GAIN_MULT,
   FLOAT_LIFETIME,
   FLOAT_MULTIPLY_SCALE,
   FLOAT_RISE_SPEED,
-  GATE_CELL_LEFT_X,
-  GATE_CELL_RIGHT_X,
-  GATE_CELL_WIDTH,
   GOAL_DISTANCE,
   GOAL_SAFETY,
   GUARD_MIN,
@@ -21,7 +19,6 @@ import {
   LEADER_LERP_RATE,
   MAX_UNITS,
   ROW_HEIGHT,
-  ROW_INTERVAL,
   SCROLL_SPEED_BASE,
   SCROLL_SPEED_MAX,
   SPAWN_JITTER,
@@ -42,6 +39,7 @@ import {
   rollGateValue,
   rollRowPattern,
 } from "./gates.ts";
+import { boundaryXAt, cellRects, rollRowGap, rollRowMods } from "./rows.ts";
 import type { GamePhase, GateCell, Unit, WorldState } from "./types.ts";
 
 export interface StepEvents {
@@ -153,13 +151,25 @@ function spawnRowsIfNeeded(
       : undefined;
     const leftGuard = leftKind === "multiply" ? guard : undefined;
     const rightGuard = rightKind === "multiply" ? guard : undefined;
-    world.rows.push({
-      y: -ROW_HEIGHT,
-      left: rollCell(leftKind, world.nextRowDistance, theme, rng, leftGuard),
-      right: rollCell(rightKind, world.nextRowDistance, theme, rng, rightGuard),
-      resolved: false,
-    });
-    world.nextRowDistance += ROW_INTERVAL;
+    const left = rollCell(
+      leftKind,
+      world.nextRowDistance,
+      theme,
+      rng,
+      leftGuard,
+    );
+    const right = rollCell(
+      rightKind,
+      world.nextRowDistance,
+      theme,
+      rng,
+      rightGuard,
+    );
+    const mods = rollRowMods(left, right, world.nextRowDistance, rng);
+    world.rows.push({ y: -ROW_HEIGHT, left, right, resolved: false, ...mods });
+    const gap = rollRowGap(world.nextRowDistance, rng);
+    world.nextRowDistance +=
+      gap * (mods.speedMult > 1 ? FAST_ROW_EXTRA_GAP_MULT : 1);
   }
 }
 
@@ -170,7 +180,7 @@ function updateRows(
   dt: number,
 ) {
   const scrollDelta = speed * dt;
-  for (const row of world.rows) row.y += scrollDelta;
+  for (const row of world.rows) row.y += scrollDelta * row.speedMult;
   world.rows = world.rows.filter((row) => row.y < viewport.viewH + ROW_HEIGHT);
 }
 
@@ -284,11 +294,18 @@ function resolveRowCollisions(
   for (const row of world.rows) {
     if (row.resolved || row.y < leaderY) continue;
     row.resolved = true;
-    const isLeft = world.leaderX < VIEW_W / 2;
+    const boundary = boundaryXAt(row, world.elapsed);
+    const isLeft = world.leaderX < boundary;
     const chosenSide: "left" | "right" = isLeft ? "left" : "right";
+    row.chosenSide = chosenSide;
+    row.resolvedAt = world.elapsed;
+    // Freeze the geometry so the resolved highlight does not keep sliding.
+    row.boundaryX = boundary;
+    row.oscillation = undefined;
     const cell = isLeft ? row.left : row.right;
-    const cellCenterX =
-      (isLeft ? GATE_CELL_LEFT_X : GATE_CELL_RIGHT_X) + GATE_CELL_WIDTH / 2;
+    const rects = cellRects(boundary);
+    const rect = isLeft ? rects.left : rects.right;
+    const cellCenterX = rect.x + rect.width / 2;
     const outcome = betterSide(row, world.units.length);
     const { newCount, gameover } = applyGateEffect(
       world,

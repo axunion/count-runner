@@ -10,9 +10,9 @@ import {
 import type { GateKind } from "../theme/themeConfig.ts";
 import type { GateCell } from "./types.ts";
 
-type Phase = "phase1" | "phase2" | "phase3";
+export type Phase = "phase1" | "phase2" | "phase3";
 
-function phaseAt(distance: number): Phase {
+export function phaseAt(distance: number): Phase {
   if (distance < PHASE2_START) return "phase1";
   if (distance < PHASE3_START) return "phase2";
   return "phase3";
