@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="48" viewBox="0 0 192 48">
+  <!-- Stone Legion soldier, 4 frames of 48x48, crimson-lit stone golem -->
+  <defs>
+    <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b91c1c"/>
+      <stop offset="1" stop-color="#601010"/>
+    </linearGradient>
+    <g id="golem">
+      <!-- squat stone body -->
+      <path d="M24 9 C32 9 37 15 37 24 C37 33 34 40 24 40 C14 40 11 33 11 24 C11 15 16 9 24 9 Z" fill="url(#stone)"/>
+      <!-- shoulder plates -->
+      <path d="M11 20 L6 24 L11 27 Z" fill="#7f1d1d"/>
+      <path d="M37 20 L42 24 L37 27 Z" fill="#7f1d1d"/>
+      <!-- horns -->
+      <path d="M16 10 L13 3 L20 8 Z" fill="#7f1d1d"/>
+      <path d="M32 10 L35 3 L28 8 Z" fill="#7f1d1d"/>
+      <!-- glowing eyes -->
+      <circle cx="19" cy="19" r="2.4" fill="#fecaca"/>
+      <circle cx="29" cy="19" r="2.4" fill="#fecaca"/>
+      <circle cx="19" cy="19" r="1.1" fill="#fff1f2"/>
+      <circle cx="29" cy="19" r="1.1" fill="#fff1f2"/>
+      <!-- crack lines -->
+      <path d="M24 26 L21 31 L24 34 M24 26 L27 30" stroke="#450a0a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <g transform="translate(0 0)">
+    <ellipse cx="18" cy="44" rx="3.6" ry="2" fill="#450a0a"/>
+    <ellipse cx="30" cy="42.5" rx="3.2" ry="1.8" fill="#3b0808"/>
+    <use href="#golem" transform="rotate(-2 24 24)"/>
+  </g>
+  <g transform="translate(48 1)">
+    <ellipse cx="20" cy="43.5" rx="3.4" ry="1.9" fill="#450a0a"/>
+    <ellipse cx="28" cy="43.5" rx="3.4" ry="1.9" fill="#3b0808"/>
+    <use href="#golem"/>
+  </g>
+  <g transform="translate(96 0)">
+    <ellipse cx="30" cy="44" rx="3.6" ry="2" fill="#450a0a"/>
+    <ellipse cx="18" cy="42.5" rx="3.2" ry="1.8" fill="#3b0808"/>
+    <use href="#golem" transform="rotate(2 24 24)"/>
+  </g>
+  <g transform="translate(144 -1)">
+    <ellipse cx="20" cy="44.5" rx="3.4" ry="1.9" fill="#3b0808"/>
+    <ellipse cx="28" cy="44.5" rx="3.4" ry="1.9" fill="#450a0a"/>
+    <use href="#golem"/>
+  </g>
+</svg>

@@ -59,24 +59,55 @@ export function drawBoss(
 export function drawGuardCluster(
   ctx: CanvasRenderingContext2D,
   theme: ThemeAssetConfig,
+  images: LoadedImages,
   cellCenterX: number,
   cellBottomY: number,
   guard: number,
+  elapsed: number,
 ) {
   const clusterY = cellBottomY + 14;
   const displayCount = Math.min(guard, GUARD_DISPLAY_MAX);
+  const sprite = getSprite(theme, images, "enemyUnit");
+
+  if (sprite && sprite.img.naturalWidth > 0) {
+    const { asset, img } = sprite;
+    const frameCount = asset.frameCount ?? 1;
+    const fps = asset.fps ?? 8;
+    const sourceFrameWidth = img.naturalWidth / frameCount;
+    // Half the crowd sprite size, matching the placeholder cluster footprint.
+    const w = asset.displayWidth / 2;
+    const h = asset.displayHeight / 2;
+    for (let i = 0; i < displayCount; i++) {
+      const offset = formationOffset(i);
+      const x = cellCenterX + offset.x * 0.5;
+      const y = clusterY + offset.y * 0.5;
+      const frame = Math.floor((elapsed * fps + i) % frameCount);
+      ctx.drawImage(
+        img,
+        frame * sourceFrameWidth,
+        0,
+        sourceFrameWidth,
+        img.naturalHeight,
+        x - w / 2,
+        y - h / 2,
+        w,
+        h,
+      );
+    }
+  } else {
+    ctx.fillStyle = theme.enemy.color;
+    ctx.beginPath();
+    for (let i = 0; i < displayCount; i++) {
+      const offset = formationOffset(i);
+      const x = cellCenterX + offset.x * 0.5;
+      const y = clusterY + offset.y * 0.5;
+      ctx.moveTo(x + 3, y);
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+    }
+    ctx.fill();
+  }
 
   ctx.fillStyle = theme.enemy.color;
-  ctx.beginPath();
-  for (let i = 0; i < displayCount; i++) {
-    const offset = formationOffset(i);
-    const x = cellCenterX + offset.x * 0.5;
-    const y = clusterY + offset.y * 0.5;
-    ctx.moveTo(x + 3, y);
-    ctx.arc(x, y, 3, 0, Math.PI * 2);
-  }
-  ctx.fill();
-
   const badgeX = cellCenterX + 26;
   const badgeY = clusterY - 8;
   ctx.beginPath();

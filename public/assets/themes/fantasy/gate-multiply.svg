@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="328" height="112" viewBox="0 0 328 112">
+  <!-- Chronos Gate banner: horizontal-stretch tolerant (repeating arches + sparks), no baked numbers -->
+  <defs>
+    <linearGradient id="aether" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a78bfa"/>
+      <stop offset="0.5" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#4c1d95"/>
+    </linearGradient>
+    <pattern id="arches" width="41" height="112" patternUnits="userSpaceOnUse">
+      <path d="M2 108 L2 84 A18.5 20 0 0 1 39 84 L39 108" fill="none" stroke="#c4b5fd" stroke-width="2.5" opacity="0.45"/>
+      <path d="M9 108 L9 88 A11.5 13 0 0 1 32 88 L32 108" fill="none" stroke="#ddd6fe" stroke-width="1.5" opacity="0.3"/>
+      <path d="M20.5 26 L23 31 L20.5 36 L18 31 Z" fill="#ddd6fe" opacity="0.65"/>
+      <circle cx="6" cy="46" r="1.6" fill="#c4b5fd" opacity="0.5"/>
+      <circle cx="35" cy="52" r="1.3" fill="#ede9fe" opacity="0.45"/>
+    </pattern>
+  </defs>
+  <rect x="2" y="2" width="324" height="108" rx="16" fill="url(#aether)"/>
+  <rect x="2" y="2" width="324" height="108" rx="16" fill="url(#arches)"/>
+  <!-- top shine band -->
+  <rect x="10" y="8" width="308" height="12" rx="6" fill="#ddd6fe" opacity="0.3"/>
+  <!-- frame -->
+  <rect x="2" y="2" width="324" height="108" rx="16" fill="none" stroke="#5b21b6" stroke-width="4"/>
+  <rect x="6" y="6" width="316" height="100" rx="13" fill="none" stroke="#c4b5fd" stroke-width="1.5" opacity="0.6"/>
+</svg>

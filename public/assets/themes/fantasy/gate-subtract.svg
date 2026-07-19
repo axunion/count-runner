@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="328" height="112" viewBox="0 0 328 112">
+  <!-- Gargoyle Wall banner: horizontal-stretch tolerant (battlements + brick joints), no baked numbers -->
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dc2626"/>
+      <stop offset="0.5" stop-color="#b91c1c"/>
+      <stop offset="1" stop-color="#601010"/>
+    </linearGradient>
+    <pattern id="teeth" width="41" height="112" patternUnits="userSpaceOnUse">
+      <!-- battlement tooth along the top -->
+      <path d="M8 16 L8 4 L33 4 L33 16" fill="#7f1d1d"/>
+      <!-- brick joints -->
+      <path d="M0 44 L41 44 M0 74 L41 74" stroke="#7f1d1d" stroke-width="2.5" opacity="0.8"/>
+      <path d="M20.5 44 L20.5 74" stroke="#7f1d1d" stroke-width="2.5" opacity="0.8"/>
+      <path d="M0 30 L0 44 M41 30 L41 44" stroke="#7f1d1d" stroke-width="2.5" opacity="0.8"/>
+      <!-- claw scratches -->
+      <path d="M12 92 L18 102 M17 91 L23 101" stroke="#450a0a" stroke-width="2" opacity="0.7" stroke-linecap="round"/>
+    </pattern>
+  </defs>
+  <rect x="2" y="10" width="324" height="100" rx="10" fill="url(#wall)"/>
+  <rect x="2" y="2" width="324" height="108" rx="10" fill="url(#teeth)"/>
+  <!-- frame -->
+  <rect x="2" y="10" width="324" height="100" rx="10" fill="none" stroke="#450a0a" stroke-width="4"/>
+</svg>

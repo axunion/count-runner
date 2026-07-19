@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="328" height="112" viewBox="0 0 328 112">
+  <!-- Mana Font banner: horizontal-stretch tolerant (frame + repeating ripples), no baked numbers -->
+  <defs>
+    <linearGradient id="pool" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="0.45" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#065f46"/>
+    </linearGradient>
+    <pattern id="ripples" width="41" height="112" patternUnits="userSpaceOnUse">
+      <path d="M0 88 Q10.25 80 20.5 88 T41 88" fill="none" stroke="#6ee7b7" stroke-width="3" opacity="0.5"/>
+      <path d="M0 98 Q10.25 91 20.5 98 T41 98" fill="none" stroke="#a7f3d0" stroke-width="2" opacity="0.3"/>
+      <circle cx="12" cy="70" r="2.5" fill="#a7f3d0" opacity="0.5"/>
+      <circle cx="30" cy="60" r="1.8" fill="#d1fae5" opacity="0.4"/>
+    </pattern>
+  </defs>
+  <rect x="2" y="2" width="324" height="108" rx="16" fill="url(#pool)"/>
+  <rect x="2" y="2" width="324" height="108" rx="16" fill="url(#ripples)"/>
+  <!-- top shine band -->
+  <rect x="10" y="8" width="308" height="12" rx="6" fill="#a7f3d0" opacity="0.35"/>
+  <!-- frame -->
+  <rect x="2" y="2" width="324" height="108" rx="16" fill="none" stroke="#047857" stroke-width="4"/>
+  <rect x="6" y="6" width="316" height="100" rx="13" fill="none" stroke="#6ee7b7" stroke-width="1.5" opacity="0.6"/>
+</svg>

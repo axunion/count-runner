@@ -135,9 +135,11 @@ export function drawGateRows(
         drawGuardCluster(
           ctx,
           theme,
+          images,
           rect.x + rect.width / 2,
           cellY + ROW_HEIGHT,
           cell.guard,
+          elapsed,
         );
       }
     }
@@ -154,7 +156,7 @@ export function drawUnits(
 ) {
   const sprite = getSprite(theme, images, "unit");
 
-  if (sprite) {
+  if (sprite && sprite.img.naturalWidth > 0) {
     const { asset, img } = sprite;
     const frameCount = asset.frameCount ?? 1;
     const fps = asset.fps ?? 8;

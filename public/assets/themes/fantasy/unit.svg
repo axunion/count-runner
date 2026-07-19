@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="48" viewBox="0 0 192 48">
+  <!-- Apprentice Mage run cycle, 4 frames of 48x48, back view, running upward -->
+  <defs>
+    <linearGradient id="robe" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <g id="mage">
+      <!-- robe body flaring toward the hem (bottom = toward the camera path) -->
+      <path d="M24 10 C31 10 34 16 35 26 C36 33 37 38 38 41 L10 41 C11 38 12 33 13 26 C14 16 17 10 24 10 Z" fill="url(#robe)"/>
+      <!-- hem trim -->
+      <path d="M10 41 L38 41 L37 44 L11 44 Z" fill="#1e3a8a"/>
+      <!-- center trim stripe -->
+      <rect x="22.5" y="12" width="3" height="30" rx="1.5" fill="#93c5fd" opacity="0.85"/>
+      <!-- hood (seen from behind) -->
+      <circle cx="24" cy="12" r="8" fill="#1d4ed8"/>
+      <path d="M16.5 14 A8 8 0 0 1 31.5 14 A11 11 0 0 0 16.5 14 Z" fill="#172554"/>
+      <!-- hood tip glow -->
+      <circle cx="24" cy="6.5" r="1.6" fill="#93c5fd"/>
+      <!-- staff on the right shoulder -->
+      <rect x="33" y="8" width="2" height="26" rx="1" transform="rotate(8 34 21)" fill="#7c5a2e"/>
+      <circle cx="36.4" cy="8.6" r="2.6" fill="#93c5fd" opacity="0.9"/>
+      <circle cx="36.4" cy="8.6" r="1.2" fill="#e0f2fe"/>
+    </g>
+  </defs>
+
+  <!-- frame 0: left foot kicks back -->
+  <g transform="translate(0 0)">
+    <ellipse cx="18" cy="45.5" rx="3.4" ry="2" fill="#172554"/>
+    <ellipse cx="30" cy="43.5" rx="3" ry="1.8" fill="#0f1e46"/>
+    <use href="#mage" transform="rotate(-2 24 26)"/>
+  </g>
+  <!-- frame 1: passing, slight bob down -->
+  <g transform="translate(48 1)">
+    <ellipse cx="21" cy="44.5" rx="3.2" ry="1.9" fill="#172554"/>
+    <ellipse cx="27" cy="44.5" rx="3.2" ry="1.9" fill="#0f1e46"/>
+    <use href="#mage"/>
+  </g>
+  <!-- frame 2: right foot kicks back -->
+  <g transform="translate(96 0)">
+    <ellipse cx="30" cy="45.5" rx="3.4" ry="2" fill="#172554"/>
+    <ellipse cx="18" cy="43.5" rx="3" ry="1.8" fill="#0f1e46"/>
+    <use href="#mage" transform="rotate(2 24 26)"/>
+  </g>
+  <!-- frame 3: passing, slight bob up -->
+  <g transform="translate(144 -1)">
+    <ellipse cx="21" cy="45.5" rx="3.2" ry="1.9" fill="#0f1e46"/>
+    <ellipse cx="27" cy="45.5" rx="3.2" ry="1.9" fill="#172554"/>
+    <use href="#mage"/>
+  </g>
+</svg>

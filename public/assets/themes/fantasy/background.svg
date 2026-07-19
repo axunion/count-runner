@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="640" viewBox="0 0 720 640">
+  <!-- Night wasteland ground tile. Loops vertically: all decoration stays clear of the
+       top/bottom edges so tiles join seamlessly on the uniform base color. -->
+  <rect width="720" height="640" fill="#0f172a"/>
+
+  <!-- faint lane edges -->
+  <rect x="20" y="0" width="3" height="640" fill="#1e293b" opacity="0.8"/>
+  <rect x="697" y="0" width="3" height="640" fill="#1e293b" opacity="0.8"/>
+
+  <!-- ground ridges for scroll feel -->
+  <g stroke="#1e293b" stroke-width="3" opacity="0.8" fill="none" stroke-linecap="round">
+    <path d="M60 120 Q180 112 320 120 T660 118"/>
+    <path d="M80 280 Q220 274 380 282 T640 278"/>
+    <path d="M50 440 Q200 434 350 442 T670 438"/>
+    <path d="M90 580 Q240 572 390 580 T630 578"/>
+  </g>
+
+  <!-- scattered stones -->
+  <g fill="#1e293b">
+    <ellipse cx="120" cy="180" rx="14" ry="8"/>
+    <ellipse cx="600" cy="220" rx="18" ry="10"/>
+    <ellipse cx="360" cy="350" rx="10" ry="6"/>
+    <ellipse cx="150" cy="500" rx="16" ry="9"/>
+    <ellipse cx="560" cy="530" rx="12" ry="7"/>
+    <ellipse cx="660" cy="380" rx="9" ry="5"/>
+    <ellipse cx="70" cy="340" rx="8" ry="5"/>
+  </g>
+  <g fill="#243247">
+    <ellipse cx="118" cy="177" rx="9" ry="5"/>
+    <ellipse cx="596" cy="216" rx="11" ry="6"/>
+    <ellipse cx="148" cy="497" rx="10" ry="5"/>
+  </g>
+
+  <!-- runestones with a faint glow -->
+  <g>
+    <path d="M480 150 L492 146 L494 170 L482 173 Z" fill="#1e293b"/>
+    <path d="M486 152 L488 166" stroke="#93c5fd" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+    <path d="M230 420 L242 417 L244 442 L232 444 Z" fill="#1e293b"/>
+    <path d="M236 423 L238 437" stroke="#93c5fd" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+  </g>
+
+  <!-- drifting mana motes -->
+  <g fill="#93c5fd">
+    <circle cx="200" cy="240" r="2.5" opacity="0.35"/>
+    <circle cx="520" cy="320" r="2" opacity="0.3"/>
+    <circle cx="300" cy="540" r="2.5" opacity="0.3"/>
+    <circle cx="640" cy="120" r="2" opacity="0.25"/>
+    <circle cx="100" cy="600 " r="2" opacity="0.2"/>
+  </g>
+</svg>

@@ -147,8 +147,59 @@ const fantasyTheme = {
   },
   chrome: {
     backgroundColor: "#020617",
+    backgroundImageSrc: "/assets/themes/fantasy/chrome-background.svg",
   },
-  assets: {},
+  assets: {
+    unit: {
+      src: "/assets/themes/fantasy/unit.svg",
+      displayWidth: 24,
+      displayHeight: 24,
+      frameCount: 4,
+      fps: 8,
+    },
+    enemyUnit: {
+      src: "/assets/themes/fantasy/enemy-unit.svg",
+      displayWidth: 24,
+      displayHeight: 24,
+      frameCount: 4,
+      fps: 8,
+    },
+    leaderGlyph: {
+      src: "/assets/themes/fantasy/leader-glyph.svg",
+      displayWidth: 32,
+      displayHeight: 32,
+    },
+    gateAdd: {
+      src: "/assets/themes/fantasy/gate-add.svg",
+      displayWidth: 164,
+      displayHeight: 56,
+    },
+    gateMultiply: {
+      src: "/assets/themes/fantasy/gate-multiply.svg",
+      displayWidth: 164,
+      displayHeight: 56,
+    },
+    gateSubtract: {
+      src: "/assets/themes/fantasy/gate-subtract.svg",
+      displayWidth: 164,
+      displayHeight: 56,
+    },
+    boss: {
+      src: "/assets/themes/fantasy/boss.svg",
+      displayWidth: 120,
+      displayHeight: 120,
+    },
+    background: {
+      src: "/assets/themes/fantasy/background.svg",
+      displayWidth: 360,
+      displayHeight: 320,
+    },
+    goalBanner: {
+      src: "/assets/themes/fantasy/goal-banner.svg",
+      displayWidth: 360,
+      displayHeight: 80,
+    },
+  },
 } satisfies ThemeAssetConfig;
 
 export default fantasyTheme as ThemeAssetConfig;

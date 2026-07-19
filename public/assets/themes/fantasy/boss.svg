@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <!-- Gate Guardian: winged stone colossus; HP text is drawn by code below the sprite -->
+  <defs>
+    <linearGradient id="guardian" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#991b1b"/>
+      <stop offset="1" stop-color="#450a0a"/>
+    </linearGradient>
+    <radialGradient id="core" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fde047"/>
+      <stop offset="0.5" stop-color="#f59e0b" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#b45309" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- wings -->
+  <path d="M116 96 C86 60 52 52 18 66 C42 78 50 96 44 118 C68 108 92 112 112 132 Z" fill="#450a0a"/>
+  <path d="M124 96 C154 60 188 52 222 66 C198 78 190 96 196 118 C172 108 148 112 128 132 Z" fill="#450a0a"/>
+  <path d="M116 100 C92 72 64 64 40 72 C58 84 64 98 60 114 C78 106 98 112 112 128 Z" fill="#601010"/>
+  <path d="M124 100 C148 72 176 64 200 72 C182 84 176 98 180 114 C162 106 142 112 128 128 Z" fill="#601010"/>
+
+  <!-- body -->
+  <path d="M120 52 C158 52 180 84 180 128 C180 176 156 204 120 204 C84 204 60 176 60 128 C60 84 82 52 120 52 Z" fill="url(#guardian)"/>
+
+  <!-- shoulder plates -->
+  <path d="M62 110 L38 122 L62 136 Z" fill="#7f1d1d"/>
+  <path d="M178 110 L202 122 L178 136 Z" fill="#7f1d1d"/>
+
+  <!-- horns -->
+  <path d="M92 60 L74 22 L108 46 Z" fill="#7f1d1d"/>
+  <path d="M148 60 L166 22 L132 46 Z" fill="#7f1d1d"/>
+
+  <!-- glowing eyes -->
+  <path d="M88 96 L112 104 L88 110 Z" fill="#fbbf24"/>
+  <path d="M152 96 L128 104 L152 110 Z" fill="#fbbf24"/>
+  <circle cx="97" cy="103" r="3" fill="#fef9c3"/>
+  <circle cx="143" cy="103" r="3" fill="#fef9c3"/>
+
+  <!-- mana core in the chest -->
+  <circle cx="120" cy="150" r="30" fill="url(#core)"/>
+  <circle cx="120" cy="150" r="12" fill="#fde047"/>
+  <circle cx="120" cy="150" r="6" fill="#fefce8"/>
+
+  <!-- cracks -->
+  <path d="M96 176 L88 192 M144 176 L154 190 M120 120 L112 134 M120 120 L129 132" stroke="#2a0505" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- clenched fists -->
+  <circle cx="58" cy="168" r="16" fill="#7f1d1d"/>
+  <circle cx="182" cy="168" r="16" fill="#7f1d1d"/>
+</svg>

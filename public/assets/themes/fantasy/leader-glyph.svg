@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Guiding magic circle under the leader; rotation is applied in code -->
+  <g fill="none" stroke="#93c5fd">
+    <circle cx="32" cy="32" r="28" stroke-width="2.5" opacity="0.9"/>
+    <circle cx="32" cy="32" r="22" stroke-width="1" opacity="0.5"/>
+    <circle cx="32" cy="32" r="14" stroke-width="1.6" opacity="0.8"/>
+    <!-- inner triangle -->
+    <path d="M32 15 L46.7 40.5 L17.3 40.5 Z" stroke-width="1.6" opacity="0.85"/>
+    <!-- rune ticks on the outer ring -->
+    <g stroke-width="2" opacity="0.9">
+      <path d="M32 2.5 L32 8"/>
+      <path d="M32 56 L32 61.5"/>
+      <path d="M2.5 32 L8 32"/>
+      <path d="M56 32 L61.5 32"/>
+      <path d="M11.2 11.2 L15 15"/>
+      <path d="M49 49 L52.8 52.8"/>
+      <path d="M52.8 11.2 L49 15"/>
+      <path d="M15 49 L11.2 52.8"/>
+    </g>
+  </g>
+  <!-- vertex motes -->
+  <g fill="#e0f2fe">
+    <circle cx="32" cy="15" r="2"/>
+    <circle cx="46.7" cy="40.5" r="2"/>
+    <circle cx="17.3" cy="40.5" r="2"/>
+  </g>
+</svg>

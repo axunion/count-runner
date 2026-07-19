@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1280" viewBox="0 0 1920 1280">
+  <!-- Page chrome: midnight sky over a ruined horizon, one tone darker than the field -->
+  <defs>
+    <radialGradient id="sky" cx="0.5" cy="0.42" r="0.9">
+      <stop offset="0" stop-color="#0b1226"/>
+      <stop offset="0.6" stop-color="#040814"/>
+      <stop offset="1" stop-color="#020617"/>
+    </radialGradient>
+    <linearGradient id="pillarFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a0f1f"/>
+      <stop offset="1" stop-color="#030712"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1280" fill="url(#sky)"/>
+
+  <!-- stars -->
+  <g fill="#93c5fd">
+    <circle cx="150" cy="120" r="2" opacity="0.5"/>
+    <circle cx="420" cy="80" r="1.5" opacity="0.35"/>
+    <circle cx="700" cy="180" r="1.8" opacity="0.4"/>
+    <circle cx="980" cy="60" r="2.2" opacity="0.5"/>
+    <circle cx="1240" cy="150" r="1.5" opacity="0.35"/>
+    <circle cx="1520" cy="90" r="2" opacity="0.45"/>
+    <circle cx="1780" cy="200" r="1.6" opacity="0.4"/>
+    <circle cx="260" cy="320" r="1.4" opacity="0.3"/>
+    <circle cx="600" cy="380" r="1.2" opacity="0.25"/>
+    <circle cx="1100" cy="300" r="1.6" opacity="0.3"/>
+    <circle cx="1400" cy="360" r="1.3" opacity="0.25"/>
+    <circle cx="1680" cy="420" r="1.5" opacity="0.3"/>
+    <circle cx="80" cy="520" r="1.4" opacity="0.25"/>
+    <circle cx="1850" cy="560" r="1.4" opacity="0.25"/>
+  </g>
+
+  <!-- distant moon glow -->
+  <circle cx="1560" cy="220" r="70" fill="#93c5fd" opacity="0.08"/>
+  <circle cx="1560" cy="220" r="44" fill="#cbd5f5" opacity="0.12"/>
+
+  <!-- ruined pillars on the horizon -->
+  <g fill="url(#pillarFade)">
+    <path d="M0 1280 L0 900 L60 880 L110 910 L120 1280 Z"/>
+    <path d="M200 1280 L210 980 L250 960 L285 990 L290 1280 Z"/>
+    <path d="M1650 1280 L1660 940 L1710 915 L1755 950 L1760 1280 Z"/>
+    <path d="M1830 1280 L1835 1020 L1875 1000 L1920 1030 L1920 1280 Z"/>
+  </g>
+  <!-- horizon ridge -->
+  <path d="M0 1120 Q300 1080 640 1110 T1280 1100 T1920 1115 L1920 1280 L0 1280 Z" fill="#030712"/>
+
+  <!-- faint mana motes above the ridge -->
+  <g fill="#93c5fd">
+    <circle cx="340" cy="1040" r="3" opacity="0.18"/>
+    <circle cx="900" cy="1000" r="2.5" opacity="0.15"/>
+    <circle cx="1500" cy="1050" r="3" opacity="0.18"/>
+  </g>
+</svg>
