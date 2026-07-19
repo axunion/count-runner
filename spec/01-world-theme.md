@@ -59,7 +59,7 @@
 
 - テーマに属する**文字列・色・画像参照**をすべて `src/game/theme/themeConfig.ts` に集約する。コンポーネント・描画コード・CSS Modules にはテーマ由来のリテラルを一切書かない。
 - ゲート種別は文字列リテラルユニオン **`GateKind = "add" | "multiply" | "subtract"`** で表す(enum は tsconfig の `erasableSyntaxOnly` により使用不可)。
-- **効果値はテーマではなくゲームバランスに属する**(v2 変更点)。値はスポーン時に抽選され([02](./02-game-design.md) §3)、抽選レンジは `constants.ts` の定数([03](./03-architecture.md) §10)。テーマ側は表記の**接頭辞**(`displayPrefix`: "+" / "x" / "-")だけを持ち、画面表記(例 "+7")はセル生成時に `displayPrefix + 抽選値` として**データ化してセルに保持**する。書式ロジックをコンポーネントに置かない規律は v1 から維持する。
+- **効果値はテーマではなくゲームバランスに属する**(v2 変更点)。値はスポーン時に抽選され、抽選レンジは `src/game/constants.ts` の定数。テーマ側は表記の**接頭辞**(`displayPrefix`: "+" / "x" / "-")だけを持ち、画面表記(例 "+7")はセル生成時に `displayPrefix + 抽選値` として**データ化してセルに保持**する。書式ロジックをコンポーネントに置かない規律は v1 から維持する。
 - テーマオブジェクトは型 `ThemeAssetConfig` を満たすことをコンパイル時に検査しつつ、リテラル型が保持される形で default export する(TypeScript の `satisfies` の利用を推奨)。
 - 将来のテーマ追加は「`ThemeAssetConfig` を満たす別オブジェクトを default export に差し替える」だけで完結すること。
 
@@ -160,15 +160,15 @@
 | `overlay.scoreLabel` / `.bestLabel` / `.newRecordLabel` | `"SCORE"` / `"BEST"` / `"NEW RECORD!"` |
 | `field.backgroundColor` / `.stripeColor` | `#0f172a` / `#1e293b` |
 | `field.goalLineColor` / `.goalLabel` | `#fbbf24` / `"SANCTUM"` |
-| `chrome.backgroundColor` | `#020617`(画像未定義。v2 初期状態は色のみで成立) |
-| `chrome.backgroundImageSrc` / `.sidePanelImageSrc` / `.frameBorderColor` | 未定義 |
-| `assets` | 初期状態では**空オブジェクト**(全描画がプレースホルダーにフォールバック) |
+| `chrome.backgroundColor` | `#020617`(画像未定義でもこの 1 色で成立する) |
+| `chrome.backgroundImageSrc` / `.sidePanelImageSrc` / `.frameBorderColor` | v2 では未定義。v2.1 Phase 4 で背景画像を登録する |
+| `assets` | v2 では**空オブジェクト**(全描画がプレースホルダーにフォールバック)。v2.1 Phase 4 で実アセットを登録する([04-assets.md](./04-assets.md)) |
 
 ## 4. 利用側の規約
 
 - コンポーネント・描画コードからは default export されたテーマと型のみを import する(`verbatimModuleSyntax` のため型は type import)。
 - ゲートの色・名称・表記接頭辞は必ず `theme.gates[kind]` 経由で参照する。敵壁(Gargoyle Wall)も `kind: "subtract"` のゲートとして同一機構で扱い、敵専用の分岐・色指定を作らない。敵集団は `theme.enemy`、ボスは `theme.boss` 経由。
-- CSS へテーマ色・画像を渡す場合は、コンテナ要素の inline style で CSS カスタムプロパティ(例: `--player-color`、`--chrome-bg-color`)として注入する([03-architecture.md](./03-architecture.md) §9)。クロームの optional 値(画像・境界線)が未定義の場合は `"none"` を明示的に注入する(CSS 側にデフォルト値の分岐を持たせない。境界線の注入形式は [03](./03-architecture.md) §9)。
+- CSS へテーマ色・画像を渡す場合は、コンテナ要素の inline style で CSS カスタムプロパティ(例: `--player-color`、`--chrome-bg-color`)として注入する(実装は `Game.tsx`)。クロームの optional 値(画像・境界線)が未定義の場合は `"none"` を明示的に注入する(CSS 側にデフォルト値の分岐を持たせない)。
 
 ## 5. 検証(ハードコード禁止の確認方法)
 
